@@ -68,9 +68,10 @@ class GameScene: SKScene{
     var counter = 0
     var gameStateIsInGame = true
     var minute = 0
-    var gameSpeed:CGFloat = 0.5
+    var gameSpeed:CGFloat = 0.15
     var maxSpeed: Double = 0.0
-    var SpawnRange: CGFloat = 1.4
+    var SpawnRangeMonster: CGFloat = 2.2
+    var SpawnRangePaper:CGFloat = 2.5
     var previousScore = 20
     var speedScore = 20
     private var invincibile = false
@@ -132,14 +133,14 @@ class GameScene: SKScene{
         run(SKAction.repeatForever(
             SKAction.sequence([
                 SKAction.run(addInvincibilityMask),
-                SKAction.wait(forDuration: TimeInterval(5.0),withRange: 3.0)
+                SKAction.wait(forDuration: TimeInterval(random(min : 1, max: 55)))
             ])
-        ))
+            ))
         
         run(SKAction.repeatForever(
             SKAction.sequence([
                 SKAction.run(addMonster),
-                SKAction.wait(forDuration: TimeInterval(SpawnRange))
+                SKAction.wait(forDuration: TimeInterval(SpawnRangeMonster))
             ])
         ))
         
@@ -148,7 +149,7 @@ class GameScene: SKScene{
             
             SKAction.sequence([
                 SKAction.run(addToiletPaper),
-                SKAction.wait(forDuration: TimeInterval(SpawnRange), withRange: 0.5)
+                SKAction.wait(forDuration: TimeInterval(SpawnRangePaper), withRange: 0.5)
             ])
         ))
         //4
@@ -183,16 +184,18 @@ class GameScene: SKScene{
 
     
     func changeSpeed(){
-       if maxSpeed <= 7.0 {
-    if ScoreInteger >= previousScore * 2 {
-                           gameSpeed += 0.3
-                           maxSpeed += 0.2
+       if maxSpeed <= 16.0 {
+    if ScoreInteger >= previousScore + 200 {
+                           gameSpeed += 0.2
+                           maxSpeed += 0.5
                     previousScore = ScoreInteger
                        print("SPEED\(self.gameSpeed)")
                        print("MAX\(self.maxSpeed)")
-                           if SpawnRange >= 0.4 {
-                               SpawnRange -= 0.4
-                               print("SPAWN\(self.SpawnRange)")
+                           if SpawnRangeMonster >= 0.2 {
+                               SpawnRangeMonster -= 0.5
+                            SpawnRangePaper -= 0.5
+                               print("SPAWN\(self.SpawnRangeMonster)")
+                            print("SPAWN\(self.SpawnRangePaper)")
                            }
                            
                        }
@@ -219,7 +222,7 @@ class GameScene: SKScene{
         player.physicsBody?.affectedByGravity = false
         player.zPosition = -5
         player.position = CGPoint(x: size.width * 0.1, y: size.height * 0.25)
-        player.setScale(0.12)
+        player.setScale(0.10)
         // 4
         addChild(player)
         
@@ -254,7 +257,7 @@ class GameScene: SKScene{
     
     
     func random() -> CGFloat {
-        return CGFloat(Float(arc4random()) / 0xFFFFFFFF)
+        return CGFloat(Float(arc4random()) / 0xFFFFFFFF )
     }
     
     func random(min: CGFloat, max: CGFloat) -> CGFloat {
@@ -339,7 +342,7 @@ class GameScene: SKScene{
         invincibilityMask.physicsBody?.node?.name = "invincibilityMask"
         invincibilityMask.physicsBody?.contactTestBitMask = PhysicsCategory.player // 4
         invincibilityMask.physicsBody?.collisionBitMask = PhysicsCategory.none // 5
-        let actualY = random(min: invincibilityMask.size.height/2, max: size.height - invincibilityMask.size.height/2)
+        let actualY = random(min: invincibilityMask.size.height/2, max: player.size.height + 50 )
         invincibilityMask.position = CGPoint(x: size.width + invincibilityMask.size.width/2, y: actualY)
         invincibilityMask.speed = 1
         let actionMove = SKAction.move(to: CGPoint(x: -invincibilityMask.size.width/2, y: actualY),
@@ -361,8 +364,8 @@ class GameScene: SKScene{
         siringe.physicsBody?.collisionBitMask = PhysicsCategory.none // 5
         siringe.setScale(0.025)
         siringe.physicsBody?.affectedByGravity = true
-        let fall = SKAction.moveTo(y: self.frame.height, duration: 0.08)
-        let waitTheFall = SKAction.wait(forDuration: 0.08)
+        let fall = SKAction.moveTo(y: siringe.frame.height/2 , duration: 0.01 )
+        let waitTheFall = SKAction.wait(forDuration: 0.02)
         let actualY = random(min: siringe.size.height/2, max: size.height - siringe.size.height/2)
         siringe.position = CGPoint(x: size.width + siringe.size.width/2, y: actualY)
         siringe.speed = 1
@@ -513,7 +516,7 @@ class GameScene: SKScene{
                    let direction = offset.normalized()
                    
                    // 7 - Make it shoot far enough to be guaranteed off screen
-                   let shootAmount = direction * 1000
+                   let shootAmount = direction * 750
                    
                    // 8 - Add the shoot amount to the current position
                    let realDest = shootAmount + projectile.position
@@ -528,7 +531,7 @@ class GameScene: SKScene{
         
     }
     func randomWeaponSpawn(position: CGPoint) {
-         switch (arc4random_uniform(3)) {
+        switch (random(min : 1, max: 35)) {
 
            case 0:
                 
@@ -583,8 +586,8 @@ class GameScene: SKScene{
 //        invincibilità
         if projectile == player && monster.physicsBody?.node!.name == "invincibilityMask" {
                 invincibile = true
-                let fadeOutAction = SKAction.fadeOut(withDuration: 0.4)
-                let fadeInAction = SKAction.fadeIn(withDuration: 0.4)
+                let fadeOutAction = SKAction.fadeOut(withDuration: 0.5)
+                let fadeInAction = SKAction.fadeIn(withDuration: 0.5)
             let fadeOutIn = SKAction.sequence([fadeOutAction,fadeInAction])
                 let fadeOutInAction = SKAction.repeat(fadeOutIn, count: 5)
                 let waitForNextAction = SKAction.wait(forDuration: TimeInterval(2.1))
