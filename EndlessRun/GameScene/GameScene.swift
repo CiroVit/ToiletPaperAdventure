@@ -68,10 +68,10 @@ class GameScene: SKScene{
     var counter = 0
     var gameStateIsInGame = true
     var minute = 0
-    var gameSpeed:CGFloat = 0.15
+    var gameSpeed:CGFloat = 0.5
     var maxSpeed: Double = 0.0
-    var SpawnRangeMonster: CGFloat = 2.2
-    var SpawnRangePaper:CGFloat = 2.5
+    var minSpawnMonster:Double = 2.0
+    var maxSpawnMonster:Double = 17.0
     var previousScore = 20
     var speedScore = 20
     private var invincibile = false
@@ -83,24 +83,9 @@ class GameScene: SKScene{
    
 //    points based on time
     override func update(_ currentTime: TimeInterval) {
-        if gameStateIsInGame == true {
-            if counter >= 60 && minute <= 1 {
-            ScoreInteger = ScoreInteger + 1
-            counter = 0
-                minute = minute + 1
-                 self.scoreLabel.text = "SCORE : \(self.ScoreInteger)"
-            } else if counter >= 60 && minute >= 1 {
-            ScoreInteger = ScoreInteger + 5
-            counter = 0
-            minute = minute + 1
-            self.scoreLabel.text = "SCORE : \(self.ScoreInteger)"
-            } else{
-                counter = counter + 1
-            }
+        
+        timeScore()
     }
-    }
-
-//    Game Speed
     
     
     
@@ -126,7 +111,7 @@ class GameScene: SKScene{
         
         createBackground()
         createScore()
-        createSky()
+//        createSky()
 //        createGround()
         
         // 3
@@ -140,7 +125,8 @@ class GameScene: SKScene{
         run(SKAction.repeatForever(
             SKAction.sequence([
                 SKAction.run(addMonster),
-                SKAction.wait(forDuration: TimeInterval(SpawnRangeMonster))
+                SKAction.wait(forDuration: TimeInterval(random(min : CGFloat(minSpawnMonster), max: CGFloat(maxSpawnMonster))))
+
             ])
         ))
         
@@ -149,16 +135,26 @@ class GameScene: SKScene{
             
             SKAction.sequence([
                 SKAction.run(addToiletPaper),
-                SKAction.wait(forDuration: TimeInterval(SpawnRangePaper), withRange: 0.5)
+                SKAction.wait(forDuration: TimeInterval(random(min : CGFloat(minSpawnMonster), max: CGFloat(maxSpawnMonster))))
+
             ])
         ))
+        
+        run(SKAction.repeatForever(
+        SKAction.sequence([
+            SKAction.run(AddCoin),
+            SKAction.wait(forDuration: TimeInterval(random(min : 1, max: 10)))
+        ])
+        ))
+        
+        
         //4
         
         physicsWorld.gravity = .init(dx: 0, dy: -1)
         physicsWorld.contactDelegate = self
         buildPlayer()
         animatePlayer()
-       
+        timeScore()
         
         
 //        animatePlayer()
@@ -170,6 +166,22 @@ class GameScene: SKScene{
         //        backgroundMusic.autoplayLooped = true
         //        addChild(backgroundMusic)
     }
+    
+    func timeScore(){
+        if gameStateIsInGame == true {
+                if counter >= 60{
+                ScoreInteger = ScoreInteger + 1
+                counter = 0
+                     self.scoreLabel.text = "SCORE : \(self.ScoreInteger)"
+                    DispatchQueue.main.async {
+                               self.scoreLabel.text = "SCORE : \(self.ScoreInteger)"
+                           }
+                           changeSpeed()
+                } else{
+                    counter = counter + 1
+                }
+        }
+        }
     
     func createScore() {
         scoreLabel = SKLabelNode(fontNamed: "Chalkduster")
@@ -186,21 +198,19 @@ class GameScene: SKScene{
     func changeSpeed(){
        if maxSpeed <= 16.0 {
     if ScoreInteger >= previousScore + 200 {
-                           gameSpeed += 0.2
+                           gameSpeed += 0.1
                            maxSpeed += 0.5
                     previousScore = ScoreInteger
                        print("SPEED\(self.gameSpeed)")
                        print("MAX\(self.maxSpeed)")
-                           if SpawnRangeMonster >= 0.2 {
-                               SpawnRangeMonster -= 0.5
-                            SpawnRangePaper -= 0.5
-                               print("SPAWN\(self.SpawnRangeMonster)")
-                            print("SPAWN\(self.SpawnRangePaper)")
+        minSpawnMonster += 0.2
+        maxSpawnMonster -= 0.2
+                            
                            }
                            
                        }
                    }
-               }
+               
     
     
     func buildPlayer(){
@@ -237,23 +247,23 @@ class GameScene: SKScene{
     }
     
     
-    func createSky() {
-        let topSky = SKSpriteNode(color: UIColor(hue: 0.55, saturation: 0.14, brightness: 0.77, alpha: 1), size: CGSize(width: frame.width, height: frame.height * 0.67))
-        topSky.anchorPoint = CGPoint(x: 0.5, y: 1)
-        
-        let bottomSky = SKSpriteNode(color: UIColor(hue: 0.55, saturation: 0.16, brightness: 0.76, alpha: 1), size: CGSize(width: frame.width, height: frame.height * 0.33))
-        bottomSky.anchorPoint = CGPoint(x: 0.5, y: 1)
-        
-        topSky.position = CGPoint(x: frame.midX, y: frame.height)
-        bottomSky.position = CGPoint(x: frame.midX, y: bottomSky.frame.height)
-        
-        addChild(topSky)
-        addChild(bottomSky)
-        
-        bottomSky.zPosition = -40
-        topSky.zPosition = -40
-    }
-    
+//    func createSky() {
+//        let topSky = SKSpriteNode(color: UIColor(hue: 0.55, saturation: 0.14, brightness: 0.77, alpha: 1), size: CGSize(width: frame.width, height: frame.height * 0.67))
+//        topSky.anchorPoint = CGPoint(x: 0.5, y: 1)
+//
+//        let bottomSky = SKSpriteNode(color: UIColor(hue: 0.55, saturation: 0.16, brightness: 0.76, alpha: 1), size: CGSize(width: frame.width, height: frame.height * 0.33))
+//        bottomSky.anchorPoint = CGPoint(x: 0.5, y: 1)
+//
+//        topSky.position = CGPoint(x: frame.midX, y: frame.height)
+//        bottomSky.position = CGPoint(x: frame.midX, y: bottomSky.frame.height)
+//
+//        addChild(topSky)
+//        addChild(bottomSky)
+//
+//        bottomSky.zPosition = -40
+//        topSky.zPosition = -40
+//    }
+//
     
     
     func random() -> CGFloat {
@@ -294,7 +304,7 @@ class GameScene: SKScene{
         
         // Create the actions
         let actionMove = SKAction.move(to: CGPoint(x: -monster.size.width/2, y: actualY),
-                                       duration: TimeInterval(gameSpeed))
+                                       duration: TimeInterval(1))
         
         //        let loseAction = SKAction.run() { [weak self] in
         //            guard let `self` = self else { return }
@@ -326,7 +336,7 @@ class GameScene: SKScene{
         
         
         let actionMove = SKAction.move(to: CGPoint(x: -toiletPaper.size.width/2, y:toiletPaper.size.height/2+20),
-                                       duration: TimeInterval(gameSpeed))
+                                       duration: TimeInterval(1))
         
         let actionMoveDone = SKAction.removeFromParent()
         
@@ -412,12 +422,32 @@ class GameScene: SKScene{
         let waitTheFall = SKAction.wait(forDuration: 0.08)
         let actualY = random(min: sanitizer.size.height/2, max: size.height - sanitizer.size.height/2)
         sanitizer.position = CGPoint(x: size.width + sanitizer.size.width/2, y: actualY)
-        sanitizer.speed = 1
+        sanitizer.speed = 0.6
         let actionMove = SKAction.move(to: CGPoint(x: -sanitizer.size.width/2, y: actualY),
                                               duration: TimeInterval(1))
         let actionMoveDone = SKAction.removeFromParent()
         sanitizer.run(SKAction.sequence([fall,waitTheFall,actionMove, actionMoveDone]))
                addChild(sanitizer)
+    }
+    
+    func AddCoin() {
+         let coin = SKSpriteNode(imageNamed: "coin")
+        coin.physicsBody = SKPhysicsBody(rectangleOf: coin.size)
+        //        sanitizer.physicsBody?.isDynamic = true
+                coin.physicsBody?.categoryBitMask = PhysicsCategory.projectile2
+                coin.physicsBody?.node?.name = "coin"
+                coin.physicsBody?.contactTestBitMask = PhysicsCategory.player // 4
+                coin.physicsBody?.collisionBitMask = PhysicsCategory.none // 5
+                coin.setScale(0.065)
+                coin.physicsBody?.affectedByGravity = true
+                let actualY = random(min: coin.size.height/2, max: size.height - player.size.height)
+                coin.position = CGPoint(x: size.width + coin.size.width/2, y: actualY)
+        coin.speed = 0.8
+                let actionMove = SKAction.move(to: CGPoint(x: -coin.size.width/2, y: actualY),
+                                                      duration: TimeInterval(1))
+                let actionMoveDone = SKAction.removeFromParent()
+                coin.run(SKAction.sequence([actionMove, actionMoveDone]))
+                       addChild(coin)
     }
     
     
@@ -522,7 +552,7 @@ class GameScene: SKScene{
                    let realDest = shootAmount + projectile.position
                    
                    // 9 - Create the actions
-                   let actionMove = SKAction.move(to: realDest, duration: 2.0)
+                   let actionMove = SKAction.move(to: realDest, duration: 1.8)
                    let actionMoveDone = SKAction.removeFromParent()
                    projectile.run(SKAction.sequence([actionMove, actionMoveDone]))
                    
@@ -531,7 +561,7 @@ class GameScene: SKScene{
         
     }
     func randomWeaponSpawn(position: CGPoint) {
-        switch (random(min : 1, max: 35)) {
+        switch (random(min : 1, max: 15)) {
 
            case 0:
                 
@@ -582,6 +612,15 @@ class GameScene: SKScene{
           }
         }
         
+//        raccogli monete
+        if projectile == player && monster.physicsBody?.node!.name == "coin" {
+            monster.removeFromParent()
+            ScoreInteger += 5
+            DispatchQueue.main.async {
+                self.scoreLabel.text = "SCORE : \(self.ScoreInteger)"
+            }
+            changeSpeed()
+        }
         
 //        invincibilità
         if projectile == player && monster.physicsBody?.node!.name == "invincibilityMask" {
@@ -596,7 +635,7 @@ class GameScene: SKScene{
                     self.invincibile = false
             }
                 let sequence = SKAction.sequence([fadeOutInAction,waitForNextAction,setInvicibleFalse])
-            ScoreInteger += 50
+            ScoreInteger += 20
             player.run(sequence)
             print("invincibility")
             monster.removeFromParent()
