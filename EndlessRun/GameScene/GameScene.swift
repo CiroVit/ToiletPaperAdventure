@@ -108,7 +108,7 @@ class GameScene: SKScene{
         
         
         //2
-        
+        createGround()
         createBackground()
         createScore()
 //        createSky()
@@ -231,8 +231,8 @@ class GameScene: SKScene{
         player.physicsBody?.collisionBitMask = PhysicsCategory.none // 5
         player.physicsBody?.affectedByGravity = false
         player.zPosition = -5
-        player.position = CGPoint(x: size.width * 0.1, y: size.height * 0.25)
-        player.setScale(0.10)
+        player.position = CGPoint(x: size.width * 0.1, y: size.height * 0.16)
+        player.setScale(0.06)
         // 4
         addChild(player)
         
@@ -457,11 +457,11 @@ class GameScene: SKScene{
         
         for i in 0 ... 1 {
             let background = SKSpriteNode(texture: backgroundTexture)
-            background.zPosition = -30
+            background.zPosition = -50
             background.anchorPoint = CGPoint.zero
-            background.position = CGPoint(x: (backgroundTexture.size().width * CGFloat(i)) - CGFloat(1 * i), y: 0)
+            background.position = CGPoint(x: (backgroundTexture.size().width * CGFloat(i)) - CGFloat(1 * i), y: 90)
             addChild(background)
-            let moveLeft = SKAction.moveBy(x: -backgroundTexture.size().width, y: 0, duration: 10)
+            let moveLeft = SKAction.moveBy(x: -backgroundTexture.size().width, y: 0, duration: 30)
             let moveReset = SKAction.moveBy(x: backgroundTexture.size().width, y: 0, duration: 0)
             let moveLoop = SKAction.sequence([moveLeft, moveReset])
             let moveForever = SKAction.repeatForever(moveLoop)
@@ -470,6 +470,25 @@ class GameScene: SKScene{
         }
         
     }
+    
+    func createGround() {
+        let groundTexture = SKTexture(imageNamed: "street1")
+        
+        for i in 0 ... 1 {
+            let ground = SKSpriteNode(texture: groundTexture)
+            ground.zPosition = -30
+            ground.anchorPoint = CGPoint.zero
+            ground.position = CGPoint(x: (groundTexture.size().width * CGFloat(i)) - CGFloat(1 * i), y: 0)
+                addChild(ground)
+            let moveLeft = SKAction.moveBy(x: -groundTexture.size().width, y: 0, duration: TimeInterval((gameSpeed) /  999998 ))
+            let moveReset = SKAction.moveBy(x: groundTexture.size().width, y: 0, duration: 0)
+                let moveLoop = SKAction.sequence([moveLeft,moveReset])
+                let moveForever = SKAction.repeatForever(moveLoop)
+            
+                ground.run(moveForever)
+            ground.setScale(1.6)
+            }
+        }
     
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
