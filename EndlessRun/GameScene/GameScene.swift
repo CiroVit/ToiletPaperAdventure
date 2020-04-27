@@ -68,6 +68,7 @@ class GameScene: SKScene{
     var counter = 0
     var gameStateIsInGame = true
     var minute = 0
+    var speedGround = 0.5
     var gameSpeed:CGFloat = 0.5
     var maxSpeed: Double = 0.0
     var minSpawnMonster:Double = 2.0
@@ -111,6 +112,8 @@ class GameScene: SKScene{
         createGround()
         createBackground()
         createScore()
+        createSky()
+        createBackBuildings()
 //        createSky()
 //        createGround()
         
@@ -157,9 +160,6 @@ class GameScene: SKScene{
         timeScore()
         
         
-//        animatePlayer()
-        
-        
         
         /* Qui inizializzo la Musica*/
         //        let backgroundMusic = SKAudioNode(fileNamed: "background-music-aac.caf")
@@ -172,7 +172,6 @@ class GameScene: SKScene{
                 if counter >= 60{
                 ScoreInteger = ScoreInteger + 1
                 counter = 0
-                     self.scoreLabel.text = "SCORE : \(self.ScoreInteger)"
                     DispatchQueue.main.async {
                                self.scoreLabel.text = "SCORE : \(self.ScoreInteger)"
                            }
@@ -201,6 +200,7 @@ class GameScene: SKScene{
                            gameSpeed += 0.1
                            maxSpeed += 0.5
                     previousScore = ScoreInteger
+                    speedGround += 1.5
                        print("SPEED\(self.gameSpeed)")
                        print("MAX\(self.maxSpeed)")
         minSpawnMonster += 0.2
@@ -245,26 +245,6 @@ class GameScene: SKScene{
                              restore: true)
         ), withKey: "walkInPlacePlayer")
     }
-    
-    
-//    func createSky() {
-//        let topSky = SKSpriteNode(color: UIColor(hue: 0.55, saturation: 0.14, brightness: 0.77, alpha: 1), size: CGSize(width: frame.width, height: frame.height * 0.67))
-//        topSky.anchorPoint = CGPoint(x: 0.5, y: 1)
-//
-//        let bottomSky = SKSpriteNode(color: UIColor(hue: 0.55, saturation: 0.16, brightness: 0.76, alpha: 1), size: CGSize(width: frame.width, height: frame.height * 0.33))
-//        bottomSky.anchorPoint = CGPoint(x: 0.5, y: 1)
-//
-//        topSky.position = CGPoint(x: frame.midX, y: frame.height)
-//        bottomSky.position = CGPoint(x: frame.midX, y: bottomSky.frame.height)
-//
-//        addChild(topSky)
-//        addChild(bottomSky)
-//
-//        bottomSky.zPosition = -40
-//        topSky.zPosition = -40
-//    }
-//
-    
     
     func random() -> CGFloat {
         return CGFloat(Float(arc4random()) / 0xFFFFFFFF )
@@ -451,6 +431,46 @@ class GameScene: SKScene{
     }
     
     
+    func createSky() {
+     
+        let skyTexture = SKTexture(imageNamed: "sky")
+            
+            for i in 0 ... 1 {
+                let sky = SKSpriteNode(texture: skyTexture)
+                sky.zPosition = -70
+                sky.anchorPoint = CGPoint.zero
+                sky.position = CGPoint(x: (skyTexture.size().width * CGFloat(i)) - CGFloat(1 * i), y: 110)
+                addChild(sky)
+                let moveLeft = SKAction.moveBy(x: -skyTexture.size().width, y: 0, duration: 150)
+                let moveReset = SKAction.moveBy(x: skyTexture.size().width, y: 0, duration: 0)
+                let moveLoop = SKAction.sequence([moveLeft, moveReset])
+                let moveForever = SKAction.repeatForever(moveLoop)
+            
+                sky.run(moveForever)
+            }
+            
+        }
+    
+    func createBackBuildings() {
+        
+        let BackBuildingsTexture = SKTexture(imageNamed: "backbuilding")
+            
+            for i in 0 ... 1 {
+                let BackBuildings = SKSpriteNode(texture: BackBuildingsTexture)
+                BackBuildings.zPosition = -60
+                BackBuildings.anchorPoint = CGPoint.zero
+                BackBuildings.position = CGPoint(x: (BackBuildingsTexture.size().width * CGFloat(i)) - CGFloat(1 * i), y: 95)
+                addChild(BackBuildings)
+                let moveLeft = SKAction.moveBy(x: -BackBuildingsTexture.size().width, y: 0, duration: 100)
+                let moveReset = SKAction.moveBy(x: BackBuildingsTexture.size().width, y: 0, duration: 0)
+                let moveLoop = SKAction.sequence([moveLeft, moveReset])
+                let moveForever = SKAction.repeatForever(moveLoop)
+            
+                BackBuildings.run(moveForever)
+            }
+            
+        }
+        
     
     func createBackground() {
         let backgroundTexture = SKTexture(imageNamed: "hospital")
@@ -461,7 +481,7 @@ class GameScene: SKScene{
             background.anchorPoint = CGPoint.zero
             background.position = CGPoint(x: (backgroundTexture.size().width * CGFloat(i)) - CGFloat(1 * i), y: 90)
             addChild(background)
-            let moveLeft = SKAction.moveBy(x: -backgroundTexture.size().width, y: 0, duration: 30)
+            let moveLeft = SKAction.moveBy(x: -backgroundTexture.size().width, y: 0, duration: 60)
             let moveReset = SKAction.moveBy(x: backgroundTexture.size().width, y: 0, duration: 0)
             let moveLoop = SKAction.sequence([moveLeft, moveReset])
             let moveForever = SKAction.repeatForever(moveLoop)
@@ -478,15 +498,15 @@ class GameScene: SKScene{
             let ground = SKSpriteNode(texture: groundTexture)
             ground.zPosition = -30
             ground.anchorPoint = CGPoint.zero
-            ground.position = CGPoint(x: (groundTexture.size().width * CGFloat(i)) - CGFloat(1 * i), y: 0)
+            ground.position = CGPoint(x: (groundTexture.size().width * CGFloat(i)) - CGFloat(1 * i), y: -7)
                 addChild(ground)
-            let moveLeft = SKAction.moveBy(x: -groundTexture.size().width, y: 0, duration: TimeInterval((gameSpeed) /  999998 ))
+            let moveLeft = SKAction.moveBy(x: -groundTexture.size().width, y: 0, duration: TimeInterval(10 / (speedGround) ))
             let moveReset = SKAction.moveBy(x: groundTexture.size().width, y: 0, duration: 0)
                 let moveLoop = SKAction.sequence([moveLeft,moveReset])
                 let moveForever = SKAction.repeatForever(moveLoop)
             
                 ground.run(moveForever)
-            ground.setScale(1.6)
+            ground.setScale(1.5)
             }
         }
     
