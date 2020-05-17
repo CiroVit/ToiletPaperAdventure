@@ -56,6 +56,7 @@ class GameScene: SKScene{
     
     
     private var walkingPlayerFrames : [SKTexture] = []
+    private var jumpingPlayerFrames : [SKTexture] = []
     var player = SKSpriteNode()
     var scoreLabel = SKLabelNode()
     var ScoreInteger = 0
@@ -214,11 +215,11 @@ class GameScene: SKScene{
     
     
     func buildPlayer(){
-        let playerAnimatedAtlas = SKTextureAtlas(named: "Pixeldoctor")
+        let playerAnimatedAtlas = SKTextureAtlas(named: "doctorrun")
         var walkFrames : [SKTexture] = []
         let numImages = playerAnimatedAtlas.textureNames.count
         for i in 1...numImages {
-            let playerTextureName = "doc\(i)"
+            let playerTextureName = "doctor_run\(i)"
             walkFrames.append(playerAnimatedAtlas.textureNamed(playerTextureName))
         }
         walkingPlayerFrames = walkFrames
@@ -232,11 +233,32 @@ class GameScene: SKScene{
         player.physicsBody?.affectedByGravity = false
         player.zPosition = -5
         player.position = CGPoint(x: size.width * 0.1, y: size.height * 0.16)
-        player.setScale(0.06)
+        player.setScale(0.5)
         // 4
         addChild(player)
         
     }
+    func buildJump(){
+        let playerJumpAnimatedAtlas = SKTextureAtlas(named: "doctorjump")
+        var jumpFrames : [SKTexture] = []
+        let numImages = playerJumpAnimatedAtlas.textureNames.count
+        for i in 1...numImages {
+            let playerTextureName = "doctor_jump\(i)"
+            jumpFrames.append(playerJumpAnimatedAtlas.textureNamed(playerTextureName))
+            
+            jumpingPlayerFrames = jumpFrames
+            let firstFrameTexture = jumpingPlayerFrames[0]
+            player = SKSpriteNode(texture: firstFrameTexture)
+        }
+        func animateJump(){
+             player.run(SKAction.repeatForever(
+                       SKAction.animate(with: jumpingPlayerFrames,
+                                        timePerFrame: 0.2,
+                                        resize: false,
+                                        restore: true)
+                   ), withKey: "walkInPlacePlayer")
+               }
+        }
     func animatePlayer(){
         player.run(SKAction.repeatForever(
             SKAction.animate(with: walkingPlayerFrames,
@@ -520,7 +542,9 @@ class GameScene: SKScene{
         if  touchLocation.x < 400 && JumpEnded == true && touchLocation.y < 400{
             // 2 - Set up initial location of projectile
             JumpEnded = false
+            buildJump()
             let jumpUpAction = SKAction.moveBy(x: 0, y: toiletPaper.size.height+80 ,duration:0.3)
+            
             // move down 20
             let jumpDownAction = SKAction.moveBy(x: 0, y: -toiletPaper.size.height-80,duration:0.4)
             // sequence of move yup then down

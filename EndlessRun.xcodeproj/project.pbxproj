@@ -7,7 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		40321754244CC9F9009B0E2D /* Pixeldoctor.atlas in Resources */ = {isa = PBXBuildFile; fileRef = 40321753244CC9F9009B0E2D /* Pixeldoctor.atlas */; };
+		401BDC072471D25A0009419D /* doctorjump.atlas in Resources */ = {isa = PBXBuildFile; fileRef = 401BDC052471D2590009419D /* doctorjump.atlas */; };
+		401BDC082471D25A0009419D /* doctorrun.atlas in Resources */ = {isa = PBXBuildFile; fileRef = 401BDC062471D25A0009419D /* doctorrun.atlas */; };
 		750430472433D54B00A5F810 /* MenuScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = 750430462433D54B00A5F810 /* MenuScene.swift */; };
 		751FB8E22430A13B0034A149 /* PlayerExplosion.sks in Resources */ = {isa = PBXBuildFile; fileRef = 751FB8E12430A13B0034A149 /* PlayerExplosion.sks */; };
 		75774811242CAB7B00C44A2D /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75774810242CAB7B00C44A2D /* AppDelegate.swift */; };
@@ -24,7 +25,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		40321753244CC9F9009B0E2D /* Pixeldoctor.atlas */ = {isa = PBXFileReference; lastKnownFileType = folder.skatlas; name = Pixeldoctor.atlas; path = ../../../../Downloads/Pixeldoctor.atlas; sourceTree = "<group>"; };
+		401BDC052471D2590009419D /* doctorjump.atlas */ = {isa = PBXFileReference; lastKnownFileType = folder.skatlas; path = doctorjump.atlas; sourceTree = "<group>"; };
+		401BDC062471D25A0009419D /* doctorrun.atlas */ = {isa = PBXFileReference; lastKnownFileType = folder.skatlas; path = doctorrun.atlas; sourceTree = "<group>"; };
 		750430462433D54B00A5F810 /* MenuScene.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuScene.swift; sourceTree = "<group>"; };
 		751FB8E12430A13B0034A149 /* PlayerExplosion.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = PlayerExplosion.sks; sourceTree = "<group>"; };
 		7577480D242CAB7B00C44A2D /* EndlessRun.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = EndlessRun.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -62,7 +64,8 @@
 				75B3BFD8242CC495002DDDE0 /* GameViewController.swift */,
 				75EC870E243877700051A154 /* Utilities.swift */,
 				75EC8710243877960051A154 /* PlayerChoiceScene.swift */,
-				40321753244CC9F9009B0E2D /* Pixeldoctor.atlas */,
+				401BDC052471D2590009419D /* doctorjump.atlas */,
+				401BDC062471D25A0009419D /* doctorrun.atlas */,
 			);
 			path = GameScene;
 			sourceTree = "<group>";
@@ -165,13 +168,14 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				401BDC082471D25A0009419D /* doctorrun.atlas in Resources */,
 				75B3BFE0242CC76F002DDDE0 /* background-music-aac.caf in Resources */,
 				7577481C242CAB7B00C44A2D /* Main.storyboard in Resources */,
+				401BDC072471D25A0009419D /* doctorjump.atlas in Resources */,
 				7577481E242CAB7C00C44A2D /* Assets.xcassets in Resources */,
 				751FB8E22430A13B0034A149 /* PlayerExplosion.sks in Resources */,
 				75774821242CAB7C00C44A2D /* LaunchScreen.storyboard in Resources */,
 				75B3BFE2242CC772002DDDE0 /* pew-pew-lei.caf in Resources */,
-				40321754244CC9F9009B0E2D /* Pixeldoctor.atlas in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
