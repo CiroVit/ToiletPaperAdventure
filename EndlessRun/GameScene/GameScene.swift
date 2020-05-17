@@ -232,8 +232,8 @@ class GameScene: SKScene{
         player.physicsBody?.collisionBitMask = PhysicsCategory.none // 5
         player.physicsBody?.affectedByGravity = false
         player.zPosition = -5
-        player.position = CGPoint(x: size.width * 0.1, y: size.height * 0.16)
-        player.setScale(0.5)
+        player.position = CGPoint(x: size.width * 0.1, y: size.height * 0.20)
+        player.setScale(0.2)
         // 4
         addChild(player)
         
@@ -542,7 +542,7 @@ class GameScene: SKScene{
         if  touchLocation.x < 400 && JumpEnded == true && touchLocation.y < 400{
             // 2 - Set up initial location of projectile
             JumpEnded = false
-            buildJump()
+            
             let jumpUpAction = SKAction.moveBy(x: 0, y: toiletPaper.size.height+80 ,duration:0.3)
             
             // move down 20
